@@ -1,0 +1,71 @@
+<app-header
+  title="Conversations support"
+  subtitle="Liste des conversations ouvertes par les clients."
+></app-header>
+
+<div class="page">
+  <div class="container">
+    <header class="header">
+      <div>
+        <h1>Conversations support</h1>
+        <p>Liste des conversations ouvertes par les clients.</p>
+      </div>
+    </header>
+
+    <section class="card">
+      <p class="loading" *ngIf="isLoading">
+        Chargement des conversations...
+      </p>
+
+      <p class="error" *ngIf="!isLoading && errorMessage">
+        {{ errorMessage }}
+      </p>
+
+      <ng-container *ngIf="conversations$ | async as conversations">
+        <p
+          class="empty"
+          *ngIf="!isLoading && !errorMessage && conversations.length === 0"
+        >
+          Aucune conversation pour le moment.
+        </p>
+
+        <table *ngIf="!isLoading && !errorMessage && conversations.length > 0">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nom</th>
+              <th>Prénom</th>
+              <th>Statut</th>
+              <th>Créée le</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let conversation of conversations">
+              <td>#{{ conversation.conversationId }}</td>
+              <td>{{ conversation.customer?.nom }}</td>
+              <td>{{ conversation.customer?.prenom }}</td>
+              <td>{{ conversation.status }}</td>
+              <td>{{ conversation.createdAt | date:'short' }}</td>
+              <button
+                type="button"
+                (click)="takeConversation(conversation)"
+                *ngIf="!conversation.agent"
+              >
+                Prendre
+              </button>
+
+              <a
+                *ngIf="conversation.agent"
+                [routerLink]="['/support/conversations', conversation.conversationId]"
+              >
+                Ouvrir
+              </a>
+            </tr>
+          </tbody>
+        </table>
+      </ng-container>
+    </section>
+  </div>
+</div>

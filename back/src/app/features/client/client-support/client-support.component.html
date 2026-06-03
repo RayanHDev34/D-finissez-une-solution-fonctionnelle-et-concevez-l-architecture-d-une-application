@@ -1,0 +1,53 @@
+<app-header
+  title="Support client"
+  subtitle="Contactez le service client Your Car Your Way."
+></app-header>
+
+<div class="page">
+  <div class="container">
+    <header class="header">
+      <div>
+        <h1>Support client</h1>
+        <p>Contactez le service client Your Car Your Way.</p>
+      </div>
+
+      <button class="primary-button" (click)="startConversation()">
+        Nouvelle conversation
+      </button>
+    </header>
+
+    <section class="card">
+      <h2>Mes conversations</h2>
+
+      <p class="loading" *ngIf="isLoading">
+        Chargement des conversations...
+      </p>
+
+      <p class="error" *ngIf="!isLoading && errorMessage">
+        {{ errorMessage }}
+      </p>
+
+      <ng-container *ngIf="conversations$ | async as conversations">
+        <p
+          class="empty"
+          *ngIf="!isLoading && !errorMessage && conversations.length === 0"
+        >
+          Vous n'avez pas encore de conversation.
+        </p>
+
+        <div
+          class="conversation"
+          *ngFor="let conversation of conversations"
+          [routerLink]="['/client/support', conversation.conversationId]"
+        >
+          <div>
+            <strong>Conversation #{{ conversation.conversationId }}</strong>
+            <p>Statut : {{ conversation.status }}</p>
+          </div>
+
+          <span>{{ conversation.createdAt | date:'short' }}</span>
+        </div>
+      </ng-container>
+    </section>
+  </div>
+</div>

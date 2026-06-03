@@ -1,0 +1,65 @@
+<div class="page">
+  <ng-container *ngIf="conversation$ | async as conversation">
+    <div class="chat-container" *ngIf="conversation">
+      <header class="chat-header">
+        <div>
+          <a routerLink="/support/conversations">← Retour</a>
+          <h1>Conversation avec {{ conversation.customer.nom }}</h1>
+          <p>Statut : {{ conversation.status }}</p>
+        </div>
+
+        <button
+          class="close-button"
+          *ngIf="conversation.status !== 'CLOSED'"
+          (click)="closeConversation(conversation)"
+        >
+          Fermer
+        </button>
+      </header>
+
+      <section class="messages">
+        <p class="loading" *ngIf="isLoadingMessages">
+          Chargement des messages...
+        </p>
+
+        <p class="error" *ngIf="!isLoadingMessages && errorMessage">
+          {{ errorMessage }}
+        </p>
+
+        <ng-container *ngIf="messages$ | async as messages">
+          <p
+            class="empty"
+            *ngIf="!isLoadingMessages && !errorMessage && messages.length === 0"
+          >
+            Aucun message pour le moment.
+          </p>
+
+          <div
+            class="message"
+            *ngFor="let message of messages"
+            [class.mine]="message.sender.role === 'SUPPORT_AGENT'"
+          >
+            <div class="bubble">
+              <strong>{{ message.sender.nom }}</strong>
+              <p>{{ message.content }}</p>
+              <span>{{ message.sentAt | date:'short' }}</span>
+            </div>
+          </div>
+        </ng-container>
+      </section>
+
+      <footer class="chat-footer" *ngIf="conversation.status !== 'CLOSED'">
+        <input
+          type="text"
+          [(ngModel)]="newMessage"
+          placeholder="Répondre au client..."
+          (keyup.enter)="sendMessage(conversation)"
+        />
+
+        <button (click)="sendMessage(conversation)">
+          Envoyer
+        </button>
+      </footer>
+    </div>
+  </ng-container>
+</div>
