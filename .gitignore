@@ -1,0 +1,12 @@
+# Ignorer tout
+*
+
+# Ne pas ignorer le .gitignore
+!.gitignore
+
+# Ne pas ignorer les dossiers front et back
+!front/
+!front/**
+
+!back/
+!back/**

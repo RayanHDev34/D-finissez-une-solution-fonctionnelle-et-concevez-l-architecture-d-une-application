@@ -33,12 +33,4 @@ public class Utilisateur {
 
     @Column(nullable = false, length = 50)
     private String role;
-
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
-
-    @PrePersist
-    public void prePersist() {
-        this.createdAt = LocalDateTime.now();
-    }
 }
